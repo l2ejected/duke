@@ -13,7 +13,7 @@ public class Duke {
         System.out.println("Hello from\n" + logo);
         System.out.println("    Hello! I'm Duke\n" + "  What can I do for you?");
         String input = sc.nextLine();
-        Boolean validInput = false;
+        //Boolean validInput = false;
         try { //1st input
             validInput = validCommand(input);
         } catch (DukeException e) {
