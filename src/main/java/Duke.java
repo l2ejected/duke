@@ -13,8 +13,13 @@ public class Duke {
         System.out.println("Hello from\n" + logo);
         System.out.println("    Hello! I'm Duke\n" + "  What can I do for you?");
         String input = sc.nextLine();
-
-//            if (validInput) {
+        Boolean validInput = false;
+        try { //1st input
+            validInput = validCommand(input);
+        } catch (DukeException e) {
+            System.out.println(e);
+            input = sc.nextLine();
+        }
                 int listCounter = 0;
                 while (!input.equals("bye")) {
                         if (!input.equals("list") && !input.contains("done")) {
@@ -98,7 +103,6 @@ public class Duke {
                         input = sc.nextLine();
                 }
                 System.out.println("Bye. Hope to see you again soon!");
-//            }
     }
 
     static boolean validCommand(String input) throws DukeException {
