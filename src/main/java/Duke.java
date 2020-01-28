@@ -12,59 +12,49 @@ public class Duke {
                 + "|____/ \\__,_|_|\\_\\___|\n";
         System.out.println("Hello from\n" + logo);
         System.out.println("    Hello! I'm Duke\n" + "  What can I do for you?");
-        String input = sc.nextLine();
-        //Boolean validInput = false;
-//        try { //1st input
-//            validInput = validCommand(input);
-//        } catch (DukeException e) {
-//            System.out.println(e);
-//            input = sc.nextLine();
-//        }
-                int listCounter = 0;
-                while (!input.equals("bye")) {
-                        if (!input.equals("list") && !input.contains("done")) {
-                            char[] inputArr = input.toCharArray();
-                            if (input.contains("todo")) { //create todo
-                                try {
-                                    String info = Todo.generateTodoDesc(inputArr);
-                                    Todo task = Todo.createTodo(info);
-                                    boolean carryOn = task.checkToDo(info);
-                                    if (carryOn) {
-                                        Task.addTask(task);
-                                    }
-                                } catch (DukeException e) {
-                                    System.out.println(e);
-                                }
-                            } else if (input.contains("event")) { //create event
-                                String date, desc;
-                                date = Event.getEventDate(inputArr);
-                                desc = Event.getEventDesc(inputArr);
-                                Event task = Event.createEvent(desc, date);
-                                Task.addTask(task);
-                            } else if (input.contains("deadline")) { //create deadline
-                                String by, desc;
-                                by = Deadline.getBy(inputArr);
-                                desc = Deadline.getDesc(inputArr);
-                                Deadline task = Deadline.createDeadline(desc, by);
-                                Task.addTask(task);
-                            }
-                        } else if (input.equals("list")) { //list
-                            System.out.println(Task.showTasks());
-                        } else { //done command
-                            Task.taskDone(input);
-                        }
-                        input = sc.nextLine();
+        while (sc.hasNext()) {
+            try {
+                String input = sc.nextLine();
+                String[] inputs = input.split(" ",2);
+                String command = inputs[0];
+                char[] inputArr = input.toCharArray();
+                if (command.equals("todo")) { //create todo
+                    if (inputs.length == 1) {
+                        throw new EmptyDescriptionException();
+                    };
+                    String info = Todo.generateTodoDesc(inputArr);
+                    Todo task = Todo.createTodo(info);
+                    Task.addTask(task);
+                } else if (command.equals("event")) { //create event
+                    if (inputs.length == 1) {
+                        throw new EmptyDescriptionException();
+                    };
+                    String date, desc;
+                    date = Event.getEventDate(inputArr);
+                    desc = Event.getEventDesc(inputArr);
+                    Event task = Event.createEvent(desc, date);
+                    Task.addTask(task);
+                } else if (command.equals("deadline")) { //create deadline
+                    if (inputs.length == 1) {
+                        throw new EmptyDescriptionException();
+                    };
+                    String by, desc;
+                    by = Deadline.getBy(inputArr);
+                    desc = Deadline.getDesc(inputArr);
+                    Deadline task = Deadline.createDeadline(desc, by);
+                    Task.addTask(task);
+                } else if (command.equals("list")) { //list command
+                    System.out.println(Task.showTasks());
+                } else if (command.equals("done")){ //done command
+                    Task.taskDone(input);
+                } else if (command.equals("bye")) { //bye command
+                    System.out.println("Bye. Hope to see you again soon!");
+                } else {
+                    throw new InvalidCommandException();
                 }
-                System.out.println("Bye. Hope to see you again soon!"); //bye
-    }
-
-    static boolean validCommand(String input) throws DukeException {
-        if(input.contains("todo") || input.contains("list") || input.contains("done") || input.contains("event") ||
-                input.contains("deadline") || input.contains("bye") || input.contains("delete")) {
-            return true;
-        } else {
-            System.out.println("OOPS!!! I'm sorry, but I don't know what that means :-(");
-            return false;
+            } catch (DukeException e) {
+                System.out.println(e);
+            }
         }
     }
 }

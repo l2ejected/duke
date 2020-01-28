@@ -43,7 +43,11 @@ public class Task {
             output += "Here are the tasks in your list: \n";
         }
         for (int i = 0; i < taskCounter; i++) {
-            output += (i+1) + "." + taskList[i].toString() + "\n";
+            if (i < taskCounter - 1) {
+                output += (i + 1) + "." + taskList[i].toString() + "\n";
+            } else {
+                output += (i + 1) + "." + taskList[i].toString();
+            }
         }
         return output;
     }
