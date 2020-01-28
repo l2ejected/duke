@@ -24,85 +24,38 @@ public class Duke {
                 while (!input.equals("bye")) {
                         if (!input.equals("list") && !input.contains("done")) {
                             char[] inputArr = input.toCharArray();
-                            String desc = "";
-                            if (input.contains("todo")) {
+                            if (input.contains("todo")) { //create todo
                                 try {
-                                    for (int i = 5; i < inputArr.length; i++) {
-                                        desc += inputArr[i];
-                                    }
-                                    Todo task = new Todo(desc);
-                                    boolean carryOn = task.checkToDo(desc);
+                                    String info = Todo.generateTodoDesc(inputArr);
+                                    Todo task = Todo.createTodo(info);
+                                    boolean carryOn = task.checkToDo(info);
                                     if (carryOn) {
-                                        arr[listCounter] = task;
-                                        System.out.println("Got it. I've added this task:");
-                                        System.out.println("  " + task.toString());
-                                        listCounter++;
-                                        System.out.println("Now you have " + listCounter + " tasks in the list.");
+                                        Task.addTask(task);
                                     }
                                 } catch (DukeException e) {
                                     System.out.println(e);
                                 }
-                            } else if (input.contains("event")) {
-                                int marker = 0;
-                                String date = "";
-                                for (int i = inputArr.length - 1; (inputArr[i] != '/'); i--) {
-                                    marker = i;
-                                }
-                                for (int i = marker + 3; i < inputArr.length; i++) {
-                                    date += inputArr[i];
-                                }
-                                System.out.println(date);
-                                for (int i = 6; i < marker - 2; i++) {
-                                    desc += inputArr[i];
-                                }
-                                System.out.println(desc);
-                                Event task = new Event(desc, date);
-                                arr[listCounter] = task;
-                                System.out.println("Got it. I've added this task:");
-                                System.out.println("  " + task.toString());
-                                listCounter++;
-                                System.out.println("Now you have " + listCounter + " tasks in the list.");
-                            } else if (input.contains("deadline")) {
-                                int marker = 0;
-                                String by = "";
-                                for (int i = inputArr.length - 1; (inputArr[i] != '/'); i--) {
-                                    marker = i;
-                                }
-                                for (int i = marker + 3; i < inputArr.length; i++) {
-                                    by += inputArr[i];
-                                }
-                                System.out.println(by);
-                                for (int i = 9; i < marker - 2; i++) {
-                                    desc += inputArr[i];
-                                }
-                                System.out.println(desc);
-                                Deadline task = new Deadline(desc, by);
-                                arr[listCounter] = task;
-                                System.out.println("Got it. I've added this task:");
-                                System.out.println("  " + task.toString());
-                                listCounter++;
-                                System.out.println("Now you have " + listCounter + " tasks in the list.");
+                            } else if (input.contains("event")) { //create event
+                                String date, desc;
+                                date = Event.getEventDate(inputArr);
+                                desc = Event.getEventDesc(inputArr);
+                                Event task = Event.createEvent(desc, date);
+                                Task.addTask(task);
+                            } else if (input.contains("deadline")) { //create deadline
+                                String by, desc;
+                                by = Deadline.getBy(inputArr);
+                                desc = Deadline.getDesc(inputArr);
+                                Deadline task = Deadline.createDeadline(desc, by);
+                                Task.addTask(task);
                             }
-                        } else if (input.equals("list")) {
-                            System.out.println("Here are the tasks in your list:");
-                            for (int i = 0; i < listCounter; i++) {
-                                System.out.println(i + 1 + "." + arr[i].toString());
-                            }
-                        } else {
-                            char charArr[] = input.toCharArray();
-                            String taskNum = "";
-                            for (int i = 5; i < charArr.length; i++) {
-                                taskNum += charArr[i];
-                            }
-                            int taskInt = Integer.parseInt(taskNum);
-                            taskInt -= 1;
-                            arr[taskInt].isDone = true;
-                            System.out.println("Nice! I've marked this task as done:");
-                            System.out.println("  [" + arr[taskInt].getStatusIcon() + "] " + arr[taskInt].getDescription());
+                        } else if (input.equals("list")) { //list
+                            System.out.println(Task.showTasks());
+                        } else { //done command
+                            Task.taskDone(input);
                         }
                         input = sc.nextLine();
                 }
-                System.out.println("Bye. Hope to see you again soon!");
+                System.out.println("Bye. Hope to see you again soon!"); //bye
     }
 
     static boolean validCommand(String input) throws DukeException {
